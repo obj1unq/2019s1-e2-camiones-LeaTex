@@ -1,0 +1,97 @@
+import cosas.*
+
+describe "tests sobre las cosas" {
+	
+	test "pesos de las cosas" {
+		assert.equals(knightRider.peso(), 500)
+		assert.equals(bumblebee.peso(), 800)
+		
+		assert.equals(paqueteDeLadrillos.peso(), 0)
+		paqueteDeLadrillos.cantidadLadrillos(148)
+		assert.equals(paqueteDeLadrillos.peso(), 2 * 148)
+
+		assert.equals(arenaAGranel.peso(), 0)
+		arenaAGranel.peso(789)
+		assert.equals(arenaAGranel.peso(), 789)
+
+		assert.equals(bateriaAntiaerea.peso(), 200)
+		bateriaAntiaerea.cargarMisiles()
+		assert.equals(bateriaAntiaerea.peso(), 300)
+		bateriaAntiaerea.lanzarMisiles()
+		assert.equals(bateriaAntiaerea.peso(), 200)
+
+		assert.equals(contenedorPortuario.peso(), 100)
+		contenedorPortuario.cargar(bumblebee)
+		assert.equals(contenedorPortuario.peso(), 100 + bumblebee.peso())
+		contenedorPortuario.cargar(bateriaAntiaerea)
+		assert.equals(contenedorPortuario.peso(), 100 + bumblebee.peso() + bateriaAntiaerea.peso())
+
+		assert.equals(residuosRadioactivos.peso(), 0)
+		residuosRadioactivos.peso(237)
+		assert.equals(residuosRadioactivos.peso(), 237)
+
+		embalajeDeSeguridad.embalar(knightRider)
+		assert.equals(embalajeDeSeguridad.peso(), knightRider.peso())
+	}
+
+	test "nivel de peligrosidad de las cosas" {
+		assert.equals(knightRider.nivelPeligrosidad(), 10)
+		
+		assert.equals(bumblebee.nivelPeligrosidad(), 15)
+		bumblebee.transformar()
+		assert.equals(bumblebee.nivelPeligrosidad(), 30)
+		bumblebee.transformar()
+		assert.equals(bumblebee.nivelPeligrosidad(), 15)
+		
+		assert.equals(paqueteDeLadrillos.nivelPeligrosidad(), 2)
+		assert.equals(arenaAGranel.nivelPeligrosidad(), 1)
+		
+		assert.equals(bateriaAntiaerea.nivelPeligrosidad(), 0)
+		bateriaAntiaerea.cargarMisiles()
+		assert.equals(bateriaAntiaerea.nivelPeligrosidad(), 100)
+		bateriaAntiaerea.lanzarMisiles()
+		assert.equals(bateriaAntiaerea.nivelPeligrosidad(), 0)
+		
+		assert.equals(contenedorPortuario.nivelPeligrosidad(), 0)
+		contenedorPortuario.cargar(bumblebee)
+		assert.equals(contenedorPortuario.nivelPeligrosidad(), bumblebee.nivelPeligrosidad())
+		contenedorPortuario.cargar(paqueteDeLadrillos)
+		assert.equals(contenedorPortuario.nivelPeligrosidad(), bumblebee.nivelPeligrosidad())
+
+		assert.equals(residuosRadioactivos.nivelPeligrosidad(), 200)
+		
+		embalajeDeSeguridad.embalar(knightRider)
+		assert.equals(embalajeDeSeguridad.nivelPeligrosidad(), knightRider.nivelPeligrosidad() / 2)
+	}
+
+	test "bultos que ocupan las cosas" {
+		assert.equals(knightRider.bultos(), 1)
+		assert.equals(bumblebee.bultos(), 2)
+
+		assert.equals(paqueteDeLadrillos.bultos(), 1)
+		paqueteDeLadrillos.cantidadLadrillos(80)
+		assert.equals(paqueteDeLadrillos.bultos(), 1)
+		paqueteDeLadrillos.cantidadLadrillos(180)
+		assert.equals(paqueteDeLadrillos.bultos(), 2)
+		paqueteDeLadrillos.cantidadLadrillos(380)
+		assert.equals(paqueteDeLadrillos.bultos(), 3)
+
+		assert.equals(arenaAGranel.bultos(), 1)
+
+		assert.equals(bateriaAntiaerea.bultos(), 1)
+		bateriaAntiaerea.cargarMisiles()
+		assert.equals(bateriaAntiaerea.bultos(), 2)
+		bateriaAntiaerea.lanzarMisiles()
+		assert.equals(bateriaAntiaerea.bultos(), 1)
+		
+		assert.equals(contenedorPortuario.bultos(), 1)
+		contenedorPortuario.cargar(bumblebee)
+		assert.equals(contenedorPortuario.bultos(), 1 + bumblebee.bultos())
+		contenedorPortuario.cargar(arenaAGranel)
+		assert.equals(contenedorPortuario.bultos(), 1 + bumblebee.bultos() + arenaAGranel.bultos())
+
+		assert.equals(residuosRadioactivos.bultos(), 1)
+		assert.equals(embalajeDeSeguridad.bultos(), 2)
+	}
+
+}

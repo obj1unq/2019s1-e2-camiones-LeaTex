@@ -9,13 +9,13 @@ object camion {
 		cosas.add(unaCosa)
 		unaCosa.reaccionar()
 	}
-	method descagar(unaCosa) {
+	method descargar(unaCosa) {
 		cosas.remove(unaCosa)
 	}
 	method pesoTotal() {
 		return tara + cosas.sum({cosa => cosa.peso() })
 	}
-	method exedidoDePeos() {
+	method excedidoDePeso() {
 		return self.pesoTotal() > pesoMaximo
 	}
 	method objetosPeligrosos(nivel) {
@@ -25,8 +25,8 @@ object camion {
 		return cosas.filter({cosa => cosa.nivelPeligrosidad() > unaCosa.nivelPeligrosidad() })
 	}
 	method puedeCircularEnRuta(nivelMaximoPeligrosidad) {
-		return cosas.all({cosa => cosa.nivelPeligrosidad() <= nivelMaximoPeligrosidad})
-		// return not(osas.any({cosa => cosa.nivelPeligrosidad() > nivelMaximoPeligrosidad}))
+		// return cosas.all({cosa => cosa.nivelPeligrosidad() <= nivelMaximoPeligrosidad})
+		return not(cosas.any({cosa => cosa.nivelPeligrosidad() > nivelMaximoPeligrosidad}))
 	}
 	
 	// agregados al camión
@@ -35,10 +35,10 @@ object camion {
 		return cosas.any({ cosa => cosa.peso().between(min, max) })		
 	}
 	method cosaMasPesada() {
-		return cosas.max({ cosa => cosa.peso() })
+		return if (cosas.isEmpty()) { null } else { cosas.max({ cosa => cosa.peso() }) }
 	}
 	method totalBultos() {
-		return cosas.sum({ cosa => cosa.bultos() })
+		return if (cosas.isEmpty()) { 0 } else { cosas.sum({ cosa => cosa.bultos() }) }
 	}
 	method pesos() {
 		return cosas.map({ cosa => cosa.peso() })

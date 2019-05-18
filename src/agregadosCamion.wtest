@@ -1,0 +1,72 @@
+import camion.*
+import cosas.*
+
+describe "tests de agregados al camión" {
+	
+	test "tiene cosa con peso entre ciertos valores" {
+		assert.notThat(camion.tieneAlgoQuePesaEntre(0, 1000))
+		camion.cargar(bumblebee)
+		assert.that(camion.tieneAlgoQuePesaEntre(0, 1000))
+		assert.that(camion.tieneAlgoQuePesaEntre(600, 1200))
+	}
+
+	test "sabe cuál es la cosa más pesada" {
+		assert.equals(camion.cosaMasPesada(), null)
+		camion.cargar(bumblebee)
+		camion.cargar(knightRider)
+		assert.equals(camion.cosaMasPesada(), bumblebee)
+	}
+	
+	test "cantidad de bultos que lleva" {
+		assert.equals(camion.totalBultos(), 0)
+
+		camion.cargar(bumblebee)
+		camion.cargar(bateriaAntiaerea)
+		assert.equals(camion.totalBultos(), bumblebee.bultos() + bateriaAntiaerea.bultos())
+	}
+	
+	test "pesos de las cosas que lleva" {
+		assert.that(camion.pesos().isEmpty())
+
+		camion.cargar(bumblebee)
+		camion.cargar(bateriaAntiaerea)
+		camion.cargar(knightRider)
+		assert.equals(camion.pesos(), [bumblebee.peso(), bateriaAntiaerea.peso(), knightRider.peso()])
+	}
+	
+	test "las cosas reaccionan cuando se cargan al camión" {
+	
+		camion.cargar(knightRider)
+		
+		assert.equals(bumblebee.nivelPeligrosidad(), 15)
+		camion.cargar(bumblebee)
+		assert.equals(bumblebee.nivelPeligrosidad(), 30)
+
+		assert.equals(paqueteDeLadrillos.peso(), 0)
+		camion.cargar(paqueteDeLadrillos)
+		assert.equals(paqueteDeLadrillos.peso(), 2 * 12)
+
+		assert.equals(arenaAGranel.peso(), 0)
+		camion.cargar(arenaAGranel)
+		assert.equals(arenaAGranel.peso(), 20)
+
+		assert.equals(bateriaAntiaerea.peso(), 200)
+		camion.cargar(bateriaAntiaerea)
+		assert.equals(bateriaAntiaerea.peso(), 300)
+
+	    contenedorPortuario.cargar(paqueteDeLadrillos)
+	    contenedorPortuario.cargar(arenaAGranel)
+	    camion.cargar(contenedorPortuario)
+	    assert.equals(paqueteDeLadrillos.peso(), 2 * 24)
+	    assert.equals(arenaAGranel.peso(), 20 + 20)
+
+		assert.equals(residuosRadioactivos.peso(), 0)
+		camion.cargar(residuosRadioactivos)
+		assert.equals(residuosRadioactivos.peso(), 15)
+
+		residuosRadioactivos.peso(0)
+		embalajeDeSeguridad.embalar(residuosRadioactivos)
+		camion.cargar(embalajeDeSeguridad)
+		assert.equals(residuosRadioactivos.peso(), 0)
+	}
+}

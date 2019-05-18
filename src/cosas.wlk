@@ -12,7 +12,7 @@ object bumblebee {
 	method nivelPeligrosidad() { return if (transformadoEnAuto) { 15 } else { 30 }  }
 	method transformar() { transformadoEnAuto = not transformadoEnAuto }
 	method bultos() { return 2 }
-	method reaccionar() { self.transformar() /* si reacciona más de una vez no cumple el enunciado */ }
+	method reaccionar() { if (transformadoEnAuto) self.transformar() }
 }
 
 object paqueteDeLadrillos {
@@ -37,7 +37,7 @@ object arenaAGranel {
 }
 
 object bateriaAntiaerea {
-	var tieneMisiles = true
+	var tieneMisiles = false
 
 	method peso() { return if (tieneMisiles) { 300 } else { 200 } }
 	method nivelPeligrosidad() { return if (tieneMisiles) { 100 } else { 0 } }
@@ -55,7 +55,7 @@ object contenedorPortuario {
 	method peso() { return 100 + cosas.sum({cosa => cosa.peso() })}
 	method nivelPeligrosidad() { return 
 			if (cosas.isEmpty()) { 0 }
-			else { cosas.max({ cosa => cosa.nivelPeligrosidad() }) }
+			else { cosas.map({ cosa => cosa.nivelPeligrosidad() }).max() }
 	}
 	method cargar(unaCosa) {
 		cosas.add(unaCosa)

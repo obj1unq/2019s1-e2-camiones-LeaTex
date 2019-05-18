@@ -1,0 +1,69 @@
+import camion.*
+import cosas.*
+
+describe "tests sobre el camión" {
+	
+	test "si está vacío su peso es la tara, por tanto sea no está excedido de peso" {
+		assert.equals(1000, camion.pesoTotal())
+		assert.notThat(camion.excedidoDePeso())
+	}
+	
+	test "se pueden cargar y descargar cosas" {
+		camion.cargar(knightRider)
+		assert.equals(1000+500, camion.pesoTotal())
+		
+		camion.cargar(bumblebee)
+		assert.equals(1000+500+800, camion.pesoTotal())
+		
+		camion.descargar(knightRider)
+		assert.equals(1000+800, camion.pesoTotal())
+		
+		camion.descargar(bumblebee)
+		assert.equals(1000, camion.pesoTotal())
+	}
+	
+	test "si carga muchas cosas queda excedido de peso" {
+		assert.notThat(camion.excedidoDePeso())
+		
+		camion.cargar(knightRider)
+		camion.cargar(bumblebee)
+		camion.cargar(bateriaAntiaerea)
+		
+		assert.that(camion.excedidoDePeso())
+		assert.that(camion.pesoTotal() >= 2500)
+	}
+	
+	test "lleva objetos peligrosos" {
+		assert.that(camion.objetosPeligrosos(0).isEmpty())
+		
+		camion.cargar(knightRider)
+		camion.cargar(bumblebee)
+		camion.cargar(bateriaAntiaerea)
+
+		assert.equals(camion.objetosPeligrosos(9), [knightRider, bumblebee, bateriaAntiaerea] )
+		assert.equals(camion.objetosPeligrosos(10), [bumblebee, bateriaAntiaerea] )
+		assert.equals(camion.objetosPeligrosos(30), [bateriaAntiaerea] )
+		assert.that(camion.objetosPeligrosos(100).isEmpty())
+	}
+	
+	test "lleva objetos más peligrosos que otros" {
+		camion.cargar(knightRider)
+		camion.cargar(bumblebee)
+		camion.cargar(bateriaAntiaerea)
+
+		assert.equals(camion.objetosMasPeligrososQue(paqueteDeLadrillos), [knightRider, bumblebee, bateriaAntiaerea] )
+		assert.equals(camion.objetosMasPeligrososQue(knightRider), [bumblebee, bateriaAntiaerea] )
+		assert.equals(camion.objetosMasPeligrososQue(bumblebee), [bateriaAntiaerea] )
+		assert.that(camion.objetosMasPeligrososQue(bateriaAntiaerea).isEmpty())
+	}
+	
+	test "puede circular por las rutas según el nivel de peligrosidad" {
+		assert.that(camion.puedeCircularEnRuta(0))
+		
+		camion.cargar(bateriaAntiaerea)
+		assert.notThat(camion.puedeCircularEnRuta(bumblebee.nivelPeligrosidad()))
+		assert.that(camion.puedeCircularEnRuta(bateriaAntiaerea.nivelPeligrosidad()))
+		assert.that(camion.puedeCircularEnRuta(100000))
+	}
+
+}
